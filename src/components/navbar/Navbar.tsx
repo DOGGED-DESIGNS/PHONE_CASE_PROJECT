@@ -77,7 +77,7 @@ const Navbar = async () => {
                     size: "sm",
                     variant: "ghost",
                   })}
-                  href={"/configure/upload"}
+                  href={"/api/auth/login"}
                 >
                   {" "}
                   Login

@@ -5,12 +5,22 @@ import { Configuration } from "@prisma/client";
 import Phone from "@/components/phone/Phone";
 import { COLORS, MODELS } from "@/app/validator/OptionValidator";
 import { cn, formatPrice } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/Products";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { createCheckoutSession } from "./action";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/ui/use-toast";
+// import { title } from "process";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
-  const [showConfitti, setShowConfetti] = useState(false);
+  const router = useRouter();
 
+  const [showConfitti, setShowConfetti] = useState(false);
+  //  this is the route side
+  // this is the toast section
+  const { toast } = useToast();
   const { color, model, finish, material } = configuration;
 
   useEffect(() => setShowConfetti(true), []);
@@ -22,6 +32,27 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { label: modelLabel } = MODELS.options.find(
     ({ value }) => value === model
   )!;
+
+  let totalPrice = BASE_PRICE;
+  if (material === "polycarbonate")
+    totalPrice += PRODUCT_PRICES.material.polycarbonate;
+  if (finish === "textured") totalPrice += PRODUCT_PRICES.finish.textured;
+
+  const { mutate: createPaymentSession } = useMutation({
+    mutationKey: ["get-checkout-session"],
+    mutationFn: createCheckoutSession,
+    onSuccess: ({ url }) => {
+      if (url) router.push(url);
+      else throw new Error("unable to retrieve payment url");
+    },
+    onError: (error) => {
+      toast({
+        title: "something went wrong",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   return (
     <>
@@ -100,6 +131,34 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                     </p>
                   </div>
                 ) : null}
+
+                <div className=" my-2 h-px bg-gray-200 ">
+                  <div className="flex item-center justify-betwen py-2">
+                    <p className=" font-semibold text-gray-900">
+                      {" "}
+                      Order total{" "}
+                    </p>
+                    <p className=" font-semibold text-gray-900">
+                      {formatPrice(totalPrice / 100)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div className="mt-8 flex justify-end pb-12">
+                  <Button
+                    onClick={() =>
+                      createPaymentSession({ configId: configuration.id })
+                    }
+                    // disabled={true}
+                    // isLoading="true"
+                    loadingText="loading"
+                    className="px-4 sm:px-6 lg:px-8"
+                  >
+                    Check Out{" "}
+                    <ArrowRight className="h-4 w-4 ml-1 inline-block " />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
