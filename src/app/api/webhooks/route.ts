@@ -8,6 +8,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.text();
     const signature = headers().get("stripe-signature");
+    console.log(signature);
 
     if (!signature) {
       return new Response("invalid signature", { status: 400 });
@@ -19,6 +20,7 @@ export async function POST(req: Request) {
     );
 
     if (event.type === "checkout.session.completed") {
+      console.log(" i have entered the even section");
       if (!event.data.object.customer_details?.email) {
         throw new Error("Missing user email");
       }
@@ -63,6 +65,8 @@ export async function POST(req: Request) {
         },
       });
     }
+
+    console.log(" i have exited the event section");
 
     return NextResponse.json({ result: event, ok: true });
   } catch (error) {
