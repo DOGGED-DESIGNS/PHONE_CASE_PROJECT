@@ -8,17 +8,18 @@ import { cn, formatPrice } from "@/lib/utils";
 import { ArrowRight, Check } from "lucide-react";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/Products";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createCheckoutSession } from "./action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 // import { title } from "process";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+// import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import { getUserz } from "./action2";
 import LoginModal from "@/components/LoginModal";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const router = useRouter();
-  const { user } = useKindeBrowserClient();
+  // const { user } = useKindeBrowserClient();
   const [showConfitti, setShowConfetti] = useState(false);
   //  this is the route side
   // this is the toast section
@@ -57,8 +58,17 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     },
   });
 
+  //  get user session from server and dont stop untilyou get it
+
+  const { data } = useQuery({
+    queryKey: ["getting users"],
+    queryFn: async () => await getUserz(),
+    retry: true,
+    retryDelay: 500,
+  });
+
   const handleCheckout = () => {
-    if (user) {
+    if (data?.user) {
       //create payment
       createPaymentSession({ configId: id });
     } else {
