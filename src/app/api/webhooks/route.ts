@@ -71,6 +71,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
+        message2: error,
+
         message: "oga we are just checking oo",
         ok: false,
       },
