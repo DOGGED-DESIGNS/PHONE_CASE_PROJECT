@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
       await db.order.update({
         where: {
-          id: orderId!,
+          id: orderId,
         },
         data: {
           isPaid: true,
@@ -70,7 +70,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
-        message: "something went wrong",
+        message: err,
         ok: false,
       },
       { status: 500 }
