@@ -12,7 +12,7 @@ import {
   FINISHES,
   MATERIALS,
   MODELS,
-} from "@/app/validator/OptionValidator";
+} from "@/validator/OptionValidator";
 import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,

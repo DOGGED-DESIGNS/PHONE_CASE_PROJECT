@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
 import { Configuration } from "@prisma/client";
 import Phone from "@/components/phone/Phone";
-import { COLORS, MODELS } from "@/app/validator/OptionValidator";
+import { COLORS, MODELS } from "@/validator/OptionValidator";
 import { cn, formatPrice } from "@/lib/utils";
 import { ArrowRight, Check } from "lucide-react";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/Products";
@@ -13,18 +13,22 @@ import { createCheckoutSession } from "./action";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
 // import { title } from "process";
+import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
+import LoginModal from "@/components/LoginModal";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const router = useRouter();
-
+  const { user } = useKindeBrowserClient();
   const [showConfitti, setShowConfetti] = useState(false);
   //  this is the route side
   // this is the toast section
   const { toast } = useToast();
   const { color, model, finish, material } = configuration;
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
   useEffect(() => setShowConfetti(true), []);
 
+  const { id } = configuration;
   const tw = COLORS.find(
     (supportedColor) => supportedColor.value === color
   )?.tw;
@@ -54,6 +58,17 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     },
   });
 
+  const handleCheckout = () => {
+    if (user) {
+      //create payment
+      createPaymentSession({ configId: id });
+    } else {
+      //need to log in
+      localStorage.setItem("configurationId", id);
+      setIsLoginModalOpen(true);
+    }
+  };
+
   return (
     <>
       <div
@@ -70,6 +85,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
           }}
         />
       </div>
+
+      <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
       <div className="mt-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
         <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
           <Phone className={cn(`bg-${tw}`)} imgSrc={configuration.imageUrl} />
@@ -147,9 +164,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
               <div>
                 <div className="mt-8 flex justify-end pb-12">
                   <Button
-                    onClick={() =>
-                      createPaymentSession({ configId: configuration.id })
-                    }
+                    onClick={() => handleCheckout()}
                     // disabled={true}
                     // isLoading="true"
                     loadingText="loading"
