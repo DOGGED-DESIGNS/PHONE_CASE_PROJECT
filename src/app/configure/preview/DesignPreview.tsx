@@ -52,7 +52,6 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     onError: (error) => {
       toast({
         title: "something went wrong",
-        description: error.message,
         variant: "destructive",
       });
     },
