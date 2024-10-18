@@ -24,9 +24,9 @@ export async function POST(req: Request) {
       if (!event.data.object.customer_details?.email) {
         throw new Error("Missing user email");
       }
-      // const session = event.data.object as Stripe.Checkout.Session;
-      // console.log('above is the session')
-      // console.log(session)
+      const session = event.data.object as Stripe.Checkout.Session;
+      console.log("above is the session");
+      console.log(session);
       // const { userId, orderId } = session.metadata || {
       //   userId: null,
       //   orderId: null,
