@@ -27,13 +27,13 @@ export async function POST(req: Request) {
       const session = event.data.object as Stripe.Checkout.Session;
       console.log("above is the session");
       console.log(session);
-      // const { userId, orderId } = session.metadata || {
-      //   userId: null,
-      //   orderId: null,
-      // };
-      // if (!userId || orderId) {
-      //   throw new Error("invalid request metadata");
-      // }
+      const { userId, orderId } = session.metadata || {
+        userId: null,
+        orderId: null,
+      };
+      if (!userId || !orderId) {
+        throw new Error("invalid request metadata");
+      }
 
       // const billingAddress = session.customer_details!.address;
       // const shippingAddress = session.shipping_details!.address;
