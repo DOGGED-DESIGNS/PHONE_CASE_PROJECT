@@ -1,7 +1,12 @@
-import React from "react";
+import React, { Suspense } from "react";
+import ThankYou from "./ThankYou";
 
 const page = () => {
-  return <div> thanks </div>;
+  return (
+    <Suspense>
+      <ThankYou />
+    </Suspense>
+  );
 };
 
 export default page;
