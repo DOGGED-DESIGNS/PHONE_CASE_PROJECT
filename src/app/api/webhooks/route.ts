@@ -8,6 +8,9 @@ import OrderReceivedEmail from "@/components/OrderReceivedEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+console.log(process.env.RESEND_API_KEY);
+console.log("above is the api key");
+
 export async function POST(req: Request) {
   try {
     const body = await req.text();
