@@ -43,5 +43,6 @@ export function constructMetadata({
       creator: "@dogged.tech",
     },
     icons,
+    metadataBase: new URL("https://doggedcase.vercel.app/"),
   };
 }

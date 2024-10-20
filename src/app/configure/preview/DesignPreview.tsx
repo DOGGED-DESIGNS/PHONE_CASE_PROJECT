@@ -29,6 +29,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   useEffect(() => {
     setShowConfetti(true);
     console.log(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { id } = configuration;
