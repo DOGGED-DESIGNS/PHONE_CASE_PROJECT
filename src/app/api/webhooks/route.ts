@@ -68,7 +68,7 @@ export async function POST(req: Request) {
         },
       });
 
-      await resend.emails.send({
+      const response = await resend.emails.send({
         from: "DoggedDesigns <uzoechijerry@gmail.com>",
         to: [event.data.object.customer_details.email],
         subject: "Thanks for your order!",
@@ -86,6 +86,11 @@ export async function POST(req: Request) {
           },
         }),
       });
+
+      if (response.error) {
+        console.log(response.error);
+        throw new Error();
+      }
     }
 
     return NextResponse.json({ result: event, ok: true });
@@ -96,6 +101,7 @@ export async function POST(req: Request) {
       {
         message2: error,
         message: "something went wrong",
+        message3: "another debuggin nightmare",
         ok: false,
       },
       { status: 500 }
