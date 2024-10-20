@@ -26,7 +26,10 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { color, model, finish, material } = configuration;
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
 
-  useEffect(() => setShowConfetti(true), []);
+  useEffect(() => {
+    setShowConfetti(true);
+    console.log(user);
+  }, []);
 
   const { id } = configuration;
   const tw = COLORS.find(
