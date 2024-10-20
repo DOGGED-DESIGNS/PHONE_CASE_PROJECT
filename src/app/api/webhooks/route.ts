@@ -94,6 +94,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
+        message2: error,
         message: "something went wrong",
         ok: false,
       },
