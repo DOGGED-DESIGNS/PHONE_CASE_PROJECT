@@ -34,7 +34,7 @@ const OrderReceivedEmail = ({
       <Head />
       <Preview>Your order summary estimated delivery date</Preview>
       <Body style={main}>
-        <Container style={container}>
+        <Container style={track.container}>
           <Section style={message}>
             <Img
               src={`${baseUrl}/snake-3.png`}
