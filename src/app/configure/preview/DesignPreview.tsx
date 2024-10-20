@@ -42,7 +42,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     totalPrice += PRODUCT_PRICES.material.polycarbonate;
   if (finish === "textured") totalPrice += PRODUCT_PRICES.finish.textured;
 
-  const { mutate: createPaymentSession } = useMutation({
+  const { mutate: createPaymentSession, isPending } = useMutation({
     mutationKey: ["get-checkout-session"],
     mutationFn: createCheckoutSession,
     onSuccess: ({ url }) => {
@@ -88,11 +88,14 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
       </div>
 
       <LoginModal isOpen={isLoginModalOpen} setIsOpen={setIsLoginModalOpen} />
-      <div className="mt-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
-        <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
-          <Phone className={cn(`bg-${tw}`)} imgSrc={configuration.imageUrl} />
+      <div className="mt-20 flex flex-col items-center md:grid text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
+        <div className="lg:col-span-3 md:col-span-4 md:row-span-2 md:row-end-2">
+          <Phone
+            className={cn(`bg-${tw}`, "max-w-[150px] md:max-w-full")}
+            imgSrc={configuration.imageUrl}
+          />
         </div>
-        <div className=" mt-10 sm:col-span-6  ">
+        <div className=" mt-6 sm:col-span-9  md:row-end-1  ">
           <h3 className=" text-3xl font-bold tracking-tight text-gray-900">
             your {modelLabel} Case{" "}
           </h3>
@@ -166,8 +169,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                 <div className="mt-8 flex justify-end pb-12">
                   <Button
                     onClick={() => handleCheckout()}
-                    // disabled={true}
-                    // isLoading="true"
+                    isLoading={isPending}
+                    disabled={isPending}
                     loadingText="loading"
                     className="px-4 sm:px-6 lg:px-8"
                   >
