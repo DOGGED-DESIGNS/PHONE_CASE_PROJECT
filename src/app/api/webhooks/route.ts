@@ -87,6 +87,8 @@ export async function POST(req: Request) {
         }),
       });
 
+      console.log(response.data);
+      console.log("above is the data for the email");
       if (response.error) {
         console.log(response.error);
         throw new Error();
